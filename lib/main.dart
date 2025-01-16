@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'widgets/custom_card_widgets.dart';
 
@@ -43,13 +44,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey();
 
-  List<AyBayModel> ayBayList = [
-    AyBayModel(ay: "ay", bay: "bay"),
-    AyBayModel(ay: "ay", bay: "bay"),
-    AyBayModel(ay: "ay", bay: "bay"),
-    AyBayModel(ay: "ay", bay: "bay"),
+  List<AyBayModel> ayBayList = [];
 
-  ];
+  DateTime date =DateTime.now();
+
+  int calculateAySum (List<AyBayModel>ayBayList){
+    int sumAy = 0;
+    for(AyBayModel A in ayBayList){
+      sumAy += int.parse(A.ay);
+    }
+    return sumAy;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +104,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () {
                       ayBayList.add(AyBayModel(
                           ay: _ayTEController.text.trim(),
-                          bay: _bayTBController.text.trim()));
+                          bay: _bayTBController.text.trim(),
+                          date:DateFormat("yMd").format(date)));
                       _ayTEController.clear();
                       _bayTBController.clear();
                       setState(() {});
@@ -143,15 +149,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView.separated(
                   shrinkWrap: true,
                   primary: false,
+                  physics: NeverScrollableScrollPhysics(),
                   itemCount: ayBayList.length,
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                       child: Row(
                         children: [
-                          SizedBox(width: 10,),
+
                           Expanded(
-                            flex: 2,
+                            flex: 3,
                             child: Text(
                               ayBayList[index].ay,
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
@@ -160,20 +167,23 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
 
+
+                          Spacer(),
                           Expanded(
-                            flex: 3 ,
+                            flex: 3,
                             child: Card(
                               child: Center(
                                 child: Text(
-                                  ayBayList[index].ay,
-                                  style: TextStyle(fontSize: 16),
+                                  ayBayList[index].date,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ),
                           ),
                           Spacer(),
                           Expanded(
-                            flex: 2,
+                            flex: 3,
                             child: Text(
                               ayBayList[index].bay,
                               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
@@ -210,6 +220,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
 /// Ekta data type banalam
 class AyBayModel {
-  final String ay, bay;
-  AyBayModel({required this.ay, required this.bay});
+  final String ay, bay, date;
+  AyBayModel( {required this.date,required this.ay, required this.bay});
 }
