@@ -38,6 +38,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   final _ayTEController = TextEditingController();
 
   final _bayTBController = TextEditingController();
@@ -56,8 +57,19 @@ class _HomeScreenState extends State<HomeScreen> {
     return sumAy;
   }
 
+  int calculateBaySum (List<AyBayModel>ayBayList){
+    int sumBay = 0;
+    for(AyBayModel A in ayBayList){
+      sumBay += int.parse(A.bay);
+    }
+    return sumBay;
+  }
+
   @override
   Widget build(BuildContext context) {
+    int result = calculateAySum(ayBayList);
+    int resultBay = calculateBaySum(ayBayList);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple.shade100,
@@ -78,17 +90,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     keyboardType: TextInputType.number,
                     controller: _ayTEController,
                     decoration:
-                        InputDecoration(hintText: "Ay", labelText: "Ay"),
+                        InputDecoration( labelText: "Ay"),
                   )),
                   SizedBox(
                     width: 10,
                   ),
                   Expanded(
                       child: TextFormField(
+                        validator: (value){
+                          if( value!.isEmpty){
+                            return "Enter Your Password";
+                          }
+                          },
+
                     keyboardType: TextInputType.number,
                     controller: _bayTBController,
                     decoration:
-                        InputDecoration(hintText: 'Bay', labelText: "Bay"),
+                        InputDecoration(
+                          labelText: "Bay",
+                          hintText: "Enter Your Password",
+                        ),
                   )),
                 ],
               ),
@@ -156,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
                       child: Row(
                         children: [
-
+                          SizedBox(width: 10,),
                           Expanded(
                             flex: 3,
                             child: Text(
@@ -214,6 +235,15 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FloatingActionButton.extended(onPressed: (){}, label: Text("Ay Total : $result")),
+          SizedBox(width: 10,),
+          FloatingActionButton.extended(onPressed: (){}, label: Text("Bay Total : ${result - resultBay}")),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
